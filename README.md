@@ -296,7 +296,7 @@ __其他設定:__
 ```
 npm install --save aws-amplify aws-amplify-react amazon-cognito-identity-js
 ```
-2. 在`.js`檔中導入模塊，並在程式碼中設定好配置。
+2. 在`.js`檔中導入模塊，並在程式碼中設定好配置。  
 ```javascript
 import Amplify, { Auth } from 'aws-amplify';
 Amplify.configure({
