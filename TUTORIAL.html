@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>TUTORIAL.md</title>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+
+<style>
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+body {
+	font-family: "Segoe WPC", "Segoe UI", "SFUIText-Light", "HelveticaNeue-Light", sans-serif, "Droid Sans Fallback";
+	font-size: 14px;
+	padding: 0 12px;
+	line-height: 22px;
+	word-wrap: break-word;
+}
+
+#code-csp-warning {
+	position: fixed;
+	top: 0;
+	right: 0;
+	color: white;
+	margin: 16px;
+	text-align: center;
+	font-size: 12px;
+	font-family: sans-serif;
+	background-color:#444444;
+	cursor: pointer;
+	padding: 6px;
+	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
+}
+
+#code-csp-warning:hover {
+	text-decoration: none;
+	background-color:#007acc;
+	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
+}
+
+
+body.scrollBeyondLastLine {
+	margin-bottom: calc(100vh - 22px);
+}
+
+body.showEditorSelection .code-line {
+	position: relative;
+}
+
+body.showEditorSelection .code-active-line:before,
+body.showEditorSelection .code-line:hover:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: -12px;
+	height: 100%;
+}
+
+body.showEditorSelection li.code-active-line:before,
+body.showEditorSelection li.code-line:hover:before {
+	left: -30px;
+}
+
+.vscode-light.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.15);
+}
+
+.vscode-light.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.40);
+}
+
+.vscode-dark.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.4);
+}
+
+.vscode-dark.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.60);
+}
+
+.vscode-high-contrast.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 160, 0, 0.7);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 160, 0, 1);
+}
+
+img {
+	max-width: 100%;
+	max-height: 100%;
+}
+
+a {
+	color: #4080D0;
+	text-decoration: none;
+}
+
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+	outline: 1px solid -webkit-focus-ring-color;
+	outline-offset: -1px;
+}
+
+hr {
+	border: 0;
+	height: 2px;
+	border-bottom: 2px solid;
+}
+
+h1 {
+	padding-bottom: 0.3em;
+	line-height: 1.2;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+h1, h2, h3 {
+	font-weight: normal;
+}
+
+h1 code,
+h2 code,
+h3 code,
+h4 code,
+h5 code,
+h6 code {
+	font-size: inherit;
+	line-height: auto;
+}
+
+a:hover {
+	color: #4080D0;
+	text-decoration: underline;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table > thead > tr > th {
+	text-align: left;
+	border-bottom: 1px solid;
+}
+
+table > thead > tr > th,
+table > thead > tr > td,
+table > tbody > tr > th,
+table > tbody > tr > td {
+	padding: 5px 10px;
+}
+
+table > tbody > tr + tr > td {
+	border-top: 1px solid;
+}
+
+blockquote {
+	margin: 0 7px 0 5px;
+	padding: 0 16px 0 10px;
+	border-left: 5px solid;
+}
+
+code {
+	font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
+	font-size: 14px;
+	line-height: 19px;
+}
+
+body.wordWrap pre {
+	white-space: pre-wrap;
+}
+
+.mac code {
+	font-size: 12px;
+	line-height: 18px;
+}
+
+pre:not(.hljs),
+pre.hljs code > div {
+	padding: 16px;
+	border-radius: 3px;
+	overflow: auto;
+}
+
+/** Theming */
+
+.vscode-light,
+.vscode-light pre code {
+	color: rgb(30, 30, 30);
+}
+
+.vscode-dark,
+.vscode-dark pre code {
+	color: #DDD;
+}
+
+.vscode-high-contrast,
+.vscode-high-contrast pre code {
+	color: white;
+}
+
+.vscode-light code {
+	color: #A31515;
+}
+
+.vscode-dark code {
+	color: #D7BA7D;
+}
+
+.vscode-light pre:not(.hljs),
+.vscode-light code > div {
+	background-color: rgba(220, 220, 220, 0.4);
+}
+
+.vscode-dark pre:not(.hljs),
+.vscode-dark code > div {
+	background-color: rgba(10, 10, 10, 0.4);
+}
+
+.vscode-high-contrast pre:not(.hljs),
+.vscode-high-contrast code > div {
+	background-color: rgb(0, 0, 0);
+}
+
+.vscode-high-contrast h1 {
+	border-color: rgb(0, 0, 0);
+}
+
+.vscode-light table > thead > tr > th {
+	border-color: rgba(0, 0, 0, 0.69);
+}
+
+.vscode-dark table > thead > tr > th {
+	border-color: rgba(255, 255, 255, 0.69);
+}
+
+.vscode-light h1,
+.vscode-light hr,
+.vscode-light table > tbody > tr + tr > td {
+	border-color: rgba(0, 0, 0, 0.18);
+}
+
+.vscode-dark h1,
+.vscode-dark hr,
+.vscode-dark table > tbody > tr + tr > td {
+	border-color: rgba(255, 255, 255, 0.18);
+}
+
+.vscode-light blockquote,
+.vscode-dark blockquote {
+	background: rgba(127, 127, 127, 0.1);
+	border-color: rgba(0, 122, 204, 0.5);
+}
+
+.vscode-high-contrast blockquote {
+	background: transparent;
+	border-color: #fff;
+}
+</style>
+
+<style>
+/* Tomorrow Theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+
+/* Tomorrow Comment */
+.hljs-comment,
+.hljs-quote {
+	color: #8e908c;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+	color: #c82829;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+	color: #f5871f;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+	color: #eab700;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+	color: #718c00;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+	color: #4271ae;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+	color: #8959a8;
+}
+
+.hljs {
+	display: block;
+	overflow-x: auto;
+	color: #4d4d4c;
+	padding: 0.5em;
+}
+
+.hljs-emphasis {
+	font-style: italic;
+}
+
+.hljs-strong {
+	font-weight: bold;
+}
+</style>
+
+<style>
+/*
+ * Markdown PDF CSS
+ */
+
+ body {
+	font-family:  "Meiryo", "Segoe WPC", "Segoe UI", "SFUIText-Light", "HelveticaNeue-Light", sans-serif, "Droid Sans Fallback";
+}
+
+pre {
+	background-color: #f8f8f8;
+	border: 1px solid #cccccc;
+	border-radius: 3px;
+	overflow-x: auto;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+}
+
+pre:not(.hljs) {
+	padding: 23px;
+	line-height: 19px;
+}
+
+blockquote {
+	background: rgba(127, 127, 127, 0.1);
+	border-color: rgba(0, 122, 204, 0.5);
+}
+
+.emoji {
+	height: 1.4em;
+}
+
+/* for inline code */
+:not(pre):not(.hljs) > code {
+	color: #C9AE75; /* Change the old color so it seems less like an error */
+	font-size: inherit;
+}
+
+/* Page Break : use <div class="page"/> to insert page break
+-------------------------------------------------------- */
+.page {
+	page-break-after: always;
+}
+
+</style>
+
+</head>
+<body>
+<h1 id="cyp-cloud-overview">CYP Cloud Overview</h1>
+<pre class="hljs"><code><div>                           AWS IAM
+                              |
+                        Amazon Cognito   λ(function): AWS Lambda and usage
+        ______________________|_______________________________
+       |                 |                 |              |
+       |                 |                 |              |
+       λ             Amazon S3          AWS IoT          ...
+(backup cognito)     (host web)            |
+       |                 |                 |
+       |                 |                 |
+Amazon DynamoDB ←---λ----|--(rule engine)--|
+       |                 |                 |
+       |                 |                 |
+ AWS Appsync-----CYP Cloud Application-----|
+                                           |
+                                        (MQTT)
+                                     CYP Devices
+</div></code></pre>
+<h1 id="techniques">Techniques</h1>
+<h2 id="1-aws-iam">1. <a href="#step-iam"><code>AWS IAM</code></a></h2>
+<p><code>IAM (Identify and Access Management)</code>為連接所有服務的核心，只有在<code>IAM</code>授權過的存取才會在應用中生效。<code>Access Permission</code>可以透過<code>Policy</code>去制定。</p>
+<ul>
+<li><strong>[AWS IAM]</strong><br>
+https://docs.aws.amazon.com/zh_tw/IAM/latest/UserGuide/introduction.html</li>
+</ul>
+<h2 id="2-amazon-cognito">2. <a href="#step-cognito"><code>Amazon Cognito</code></a></h2>
+<p><code>Cognito</code>透過<code>User Pool</code> <code>Identity Pool</code>管理所有應用程式中的使用者。透過使用者池，管理者及開發人員能夠更好的區分不同等級的使用者權限。</p>
+<ul>
+<li><strong>[Amazon Cognito]</strong><br>
+https://docs.aws.amazon.com/zh_tw/cognito/latest/developerguide/what-is-amazon-cognito.html</li>
+<li><strong>[Serverless-stack create user pool</strong><br>
+https://serverless-stack.com/chapters/create-a-cognito-user-pool.html</li>
+<li><strong>[Serverless-stack create federated identities pool]</strong>
+https://serverless-stack.com/chapters/create-a-cognito-identity-pool.html</li>
+</ul>
+<h2 id="3-amazon-s3">3. <code>Amazon S3</code></h2>
+<p><code>S3</code>除了提供付費的使用空間供整個Application運用，還能夠對靜態網頁的內容做管理 <em>(static web hosting)</em>，使得 <strong>serverless</strong> 的架構更容易實現。</p>
+<ul>
+<li><strong>[Amazon S3]</strong><br>
+https://docs.aws.amazon.com/zh_tw/AmazonS3/latest/dev/Welcome.html</li>
+<li><strong>[S3 Static Web Hosting]</strong><br>
+https://docs.aws.amazon.com/zh_tw/AmazonS3/latest/dev/WebsiteHosting.html</li>
+</ul>
+<h2 id="4-amazon-dynamodb">4. <code>Amazon DynamoDB</code></h2>
+<p><code>DynamoDB</code>屬於 <em>&quot;非關聯式資料庫&quot;(Non-SQL database)</em> 的一種。傳統的關聯式資料庫具備可靠性、穩定性；非關聯式資料庫則具有容易擴充、彈性的資料結構等優點。<code>Local Secondary Index, LSI</code> 及 <code>Global Secondary Index, GSI</code>的使用也能補足非關聯式資料庫在條件存取的劣勢。</p>
+<ul>
+<li><strong>[Amazon DynamoDB]</strong><br>
+https://docs.aws.amazon.com/zh_tw/amazondynamodb/latest/developerguide/Introduction.html</li>
+<li><strong>[DynamoDB Secodary Indexes]</strong><br>
+https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/SecondaryIndexes.html</li>
+</ul>
+<h2 id="5-aws-iot">5. <code>AWS IoT</code></h2>
+<p><code>AWS IoT</code>提供了一種透過網路與終端裝置(embedded, mobile, pc, etc.)互動的介面。除了基本的 <code>Message Queuing Telemetry Transport, MQTT</code>訊息傳輸介面外，AWS還在那之上實現了裝置影子(<em>Device Shadow</em>)來掌握即時的控制與狀態更新、以及AWS Greengrass(gateway)來對一群裝置做管理。</p>
+<ul>
+<li><strong>[AWS IoT Core]</strong><br>
+https://docs.aws.amazon.com/zh_tw/iot/latest/developerguide/what-is-aws-iot.html</li>
+<li><strong>[AWS IoT Shadow]</strong><br>
+https://docs.aws.amazon.com/zh_tw/iot/latest/developerguide/iot-device-shadows.html</li>
+<li><strong>[AWS IoT Greengrass]</strong><br>
+https://docs.aws.amazon.com/zh_tw/greengrass/latest/developerguide/what-is-gg.html</li>
+</ul>
+<h2 id="6-aws-appsync">6. <code>AWS Appsync</code></h2>
+<p><code>#TODO</code></p>
+<h2 id="7-web-application">7. <a href="#step-reactjs">Web Application</a></h2>
+<p>第一，由於<code>Amazon S3</code>只提供靜態網頁託管的服務。第二，使用ReactJS開發的網頁應用可以被build成S3能夠託管的內容。ReactJS基於Node.js，Node.js的原身又是Javascript，因此學習使用這三樣東西是必須的。除此之外，Node.js會使用到的套件會使用<code>npm</code>做為套件管理系統，也需要學習如何使用npm來管理每個project的套件。</p>
+<ul>
+<li><strong>[npm Tutorial]</strong><br>
+https://docs.npmjs.com/cli/npm</li>
+<li><strong>[Javeacript Tutorial]</strong><br>
+https://www.w3schools.com/js/</li>
+<li><strong>[Node.js Tutorial]</strong><br>
+https://www.w3schools.com/nodejs/</li>
+<li><strong>[ReactJS Tutorial]</strong><br>
+https://www.tutorialspoint.com/reactjs/</li>
+</ul>
+<p>為了要在web上存取AWS的服務，會使用到一些Node.js套件:</p>
+<ul>
+<li><strong>[AWS SDK for Javascript]</strong><br>
+https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS.html</li>
+<li><strong>[AWS Ampllify on Javascript]</strong><br>
+https://aws-amplify.github.io/docs/js/start?platform=purejs</li>
+</ul>
+<h1 id="step-by-step">Step by Step</h1>
+<h2 id="a-namestep-iamastep-iam"><a name="step-iam"></a>Step: IAM</h2>
+<h3 id="basic-rule-1-protect-your-credential">Basic Rule #1 Protect Your Credential</h3>
+<p>透過IAM政策提供許可時，僅授予一個對象其最低需要的權限。另外，小心保存您的任何密碼、存取ID、私鑰等等，不要放入任何可以供其他人瀏覽的 <strong>&quot;程式碼&quot;</strong> 中，像是github、bitbucket等等。舉例:</p>
+<pre class="hljs"><code><div>server = <span class="hljs-keyword">None</span>
+server_init(server, <span class="hljs-string">'my_server'</span>)
+server_init_auth(server, <span class="hljs-string">'my_account'</span>, <span class="hljs-string">'my_password1234'</span>) <span class="hljs-comment"># dangerous</span>
+</div></code></pre>
+<h3 id="basic-rule-2-keep-an-eye-on-resource-usage">Basic Rule #2 Keep an Eye on Resource Usage</h3>
+<div style="text-align: center;"><img style="width: 400px" src="C:\Users\frank.cho\Desktop\pairapp\tutorial\images\bill-forcast.png"/></div>  
+"Pay as you go"是AWS的基本原則，釋放任何你不再需要用到的資源，並且到帳單儀表板檢視您的預估帳單。AWS也提供了 [Monthly Calculator](http://calculator.s3.amazonaws.com/index.html)做為付費計算工具。  
+<h4 id="getting-start">- Getting Start</h4>
+<ol>
+<li>在<a href="https://console.aws.amazon.com/iam/home">IAM Console</a>左方導覽列找到「Group」→「Create New Group」</li>
+<li>輸入group name→「Next Step」</li>
+</ol>
+<div style="text-align: center;"><img style="width: 400px" src="C:\Users\frank.cho\Desktop\pairapp\tutorial\images\create-group.png"/></div>   
+<ol start="3">
+<li>Attach policy (permission)
+屬於這個「群」的「使用者」都會擁有policy定義的權限。有許多預設policy可以選擇，但也能自訂一個policy</li>
+</ol>
+<div style="text-align: center;"><img style="width: 400px" src="C:\Users\frank.cho\Desktop\pairapp\tutorial\images\attach-policy.png"/></div> 
+<ol start="4">
+<li>「Next Step」→「Create Group」</li>
+<li>在<a href="https://console.aws.amazon.com/iam/home">IAM Console</a>左方導覽列找到「Users」→「Add user」</li>
+</ol>
+<div style="text-align: center;"><img style="width: 400px" src="C:\Users\frank.cho\Desktop\pairapp\tutorial\images\add-user.png"/></div>
+<ol start="6">
+<li>輸入user name、access type選&quot;<em>Programmatic access</em>&quot;→「Next: Permission」
+這個選項代表 &quot;此user將會透過程式碼來存取服務&quot;</li>
+<li>「Add user to a group」→選擇剛才創建的group (將group的權限套用到新user上)→「Next: Review」</li>
+</ol>
+<div style="text-align: center;"><img style="width: 400px" src="C:\Users\frank.cho\Desktop\pairapp\tutorial\images\user-to-group.png"/></div>
+<ol start="8">
+<li>「Final check」→「Create User」</li>
+<li><font color="#dd0000">重要:</font> 最後是一個可供下載 <em>Access key ID</em> 和 <em>Secret access key</em> 的頁面，當離開這個頁面後就再也無法下載，請妥善保存。</li>
+</ol>
+<div style="text-align: center;"><img style="width: 400px" src="C:\Users\frank.cho\Desktop\pairapp\tutorial\images\credential-download.png"/></div>  
+<h2 id="a-namestep-cognitoastep-cognito"><a name="step-cognito"></a>Step: Cognito</h2>
+<p>Amazon Cognito提供了 <strong>Cognito User Pool, 使用者集區</strong> 和 <strong>Cognito Federated Identity Pool, 聯合身分集區</strong>。簡單來說，user pool用來管理使用者的基本資料，例如登入用的使用者名稱、帳號密碼，或是電話號碼等等；而每個使用者的真正身分是在identity pool管理，這決定了某個使用者擁有哪些服務的受限存取權。</p>
+<p>更進一步解釋的話，user pool是扮演一個使用者 <em>&quot;提供者&quot;(provider)</em> 的角色，而 federated identity pool則是將所有的 provider 提供的 user 做聯合的身分管理。因此，我們不僅能在AWS增加新使用者，還能透過第三方提供者，例如 Facebook、Google+ 等，來增加服務的使用者，就是基於這個機制。</p>
+<h4 id="getting-start">- Getting start</h4>
+<ol>
+<li>進入Amazon Cognito console →「Manage User Pools」→「Create a user pool」→ 輸入Pool name，選擇「Review defaults」</li>
+</ol>
+<div style="text-align: center;"><img style="width: 700px" src="C:\Users\frank.cho\Desktop\pairapp\tutorial\images\create-user-pool-default.png"/></div>  
+<ol start="2">
+<li>在左方選單選擇「Attibutes」→ 勾選「Email address or phone number」→開啟「Allow email addresses」讓使用者可以用email來驗證和登入</li>
+</ol>
+<div style="text-align: center;"><img style="width: 400px" src="C:\Users\frank.cho\Desktop\pairapp\tutorial\images\allow-email-address.png"/></div>  
+<ol start="3">
+<li>在左方選單選擇「Review」→「Create pool」</li>
+</ol>
+<p><strong>其他設定:</strong></p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">Panel</th>
+<th style="text-align:left">Function</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><code>Attributes</code></td>
+<td style="text-align:left"><li><code>Username</code>: 決定可以用什麼個人資料登入，例如電子郵件、電話、自定等等</li><li><code>Standard Attributes</code>: 決定註冊時需要哪些使用者基本資料(標準)</li><li><code>Custom Attributes</code>: 自訂所需要的註冊基本資料</li></td>
+</tr>
+<tr>
+<td style="text-align:left"><code>Policies</code></td>
+<td style="text-align:left"><li><code>Password Policy</code>: 定義密碼強度需求</li><li><code>Allow Sign-up</code>: 使用者能自行註冊或只允許管理這增加使用者</li><li><code>Expiration</code>: 定義由管理員創建的帳號多久會過期</li></td>
+</tr>
+<tr>
+<td style="text-align:left"><code>MFA and Verification</code></td>
+<td style="text-align:left"><li><code>Enable/Disable</code>: 開啟/關閉多方驗證功能</li><li><code>Verification Attributes</code>: 決定驗證手段</li><li><code>Verification Role</code>: 定義執行驗證動作的執行角色</li></td>
+</tr>
+<tr>
+<td style="text-align:left"><code>Message customizations</code></td>
+<td style="text-align:left"><li><code>Verification message</code>: 自訂郵件驗證訊息</li><li><code>Invitation message</code>: 自訂郵件邀請訊息</li></td>
+</tr>
+<tr>
+<td style="text-align:left"><code>Tags</code></td>
+<td style="text-align:left">在使用者集區加入標籤</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>Devices</code></td>
+<td style="text-align:left">決定是否儲存使用者存取服務的裝置</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>App clients</code></td>
+<td style="text-align:left">決定哪種應用客戶端可以存取此使用者集區</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>Triggers</code></td>
+<td style="text-align:left"><li><code>Pre Sign-up</code>: 使用Lambda function 自訂註冊工作流程</li><li><code>Pre Authentication</code>: 使用 Lambda function 自訂認證(登入)工作流程</li><li><code>Custom Message</code>: 使用 Lambda function 自訂校驗或多方驗證訊息</li><li><code>Post Authentication</code>: 使用 Lambda function 自訂登入後的工作流程</li><li><code>Post Confirmation</code>: 使用 Lambda function 自訂校驗使用者後的工作流程</li><li><code>Define Auth Challenge</code>: 使用 Lambda function 初始化客製的認證流程</li><li><code>Create Auth Challenge</code>: 使用 Lambda function 創建認證時的 challenge，會在 &quot;Define Auth Challenge&quot; 後被呼叫</li><li><code>Verify Auth Challenge Response</code>: 使用 Lambda function 校驗使用者對 challenge 的回應</li><li><code>User Migration</code>: 使用 Lambda function 自訂登入或忘記密碼時的工作流程</li><li><code>Pre Token Generation</code>: 使用 Lambda function 自訂權杖的產生流程</li></td>
+</tr>
+</tbody>
+</table>
+<ol start="4">
+<li>創建完成後頁面會自動跳轉到該集區的一般設定頁面，也能在Amazon Cognito主控台點選指定集區進入，並記住集區的「Pool id」</li>
+</ol>
+<div style="text-align: center;"><img style="width: 700px" src="C:\Users\frank.cho\Desktop\pairapp\tutorial\images\user-pool-id.png"/></div>  
+<ol start="5">
+<li>在設定介面左方「General settings」中選擇「App client」→「Add an app client」</li>
+</ol>
+<div style="text-align: center;"><img style="width: 400px" src="C:\Users\frank.cho\Desktop\pairapp\tutorial\images\add-app-client.png"/></div>  
+<ol start="6">
+<li>輸入「App client name」和「Refresh token expiration(days)」。</li>
+<li>取消勾選「Generate client secret」，因為使用Javascript SDK不支援這種 client secret</li>
+<li>勾選「Enable sign-in API for server-based authentication (ADMIN_NO_SRP_AUTH)」，這讓我們可以通過 AWS CLI 管理使用者集區</li>
+</ol>
+<div style="text-align: center;"><img style="width: 600px" src="C:\Users\frank.cho\Desktop\pairapp\tutorial\images\app-client-settings.png"/></div>  
+<ol start="9">
+<li>點擊「Create app client」並記住「App client id」</li>
+</ol>
+<div style="text-align: center;"><img style="width: 500px" src="C:\Users\frank.cho\Desktop\pairapp\tutorial\images\app-client-id.png"/></div> 
+<ol start="10">
+<li>
+<p>進入Amazon Cognito console → Manage Federated Identities→「Create new identity pool」→ 輸入Identity pool name</p>
+</li>
+<li>
+<p>在下方「Authentication Providers」區塊中選擇「Cognito」分頁，並輸入新創立的 User pool id 和 App client id</p>
+</li>
+</ol>
+<div style="text-align: center;"><img style="width: 700px" src="C:\Users\frank.cho\Desktop\pairapp\tutorial\images\choose-provider.png"/></div> 
+<ol start="12">
+<li>點選「Create Pool」後會跳轉到 one-click role 頁面，展開「Hide Details」→「View Policy Document」可以檢視和編輯&quot;驗證通過&quot;和&quot;驗證失敗&quot;時將會套用的角色(政策) → 點選「Allow」產生這些角色</li>
+</ol>
+<div style="text-align: center;"><img style="width: 450px" src="C:\Users\frank.cho\Desktop\pairapp\tutorial\images\one-click-role.png"/></div> 
+<h2 id="a-namestep-reactjsastep-reactjs"><a name="step-reactjs"></a>Step: ReactJS</h2>
+<p>在不使用ReactJS的情況下，要建立整個網頁應用程式需要兩個部分，<strong>server(back-end)</strong> 以及 <strong>web page(front-end)</strong>。Programmer編寫網頁內容的同時，也要使用script(javascript)來和伺服器(或任何外部資源)互動。ReactJS則是結合了這兩者，伺服器直接‵渲染出<code>DOM(Document Object Model)</code>，簡單來說就是 <strong>伺服器直接提供html內容</strong> 給使用者閱讀。當然，不使用ReactJS也能使伺服器直接提供內容，像這樣:</p>
+<pre class="hljs"><code><div>    <span class="hljs-keyword">var</span> AppendStr=<span class="hljs-string">''</span>;
+
+    AppendStr+=<span class="hljs-string">'&lt;div class="posit switch-fiel" style="top:10px;left:200px;width:400px;"&gt;&lt;fieldset class="setfieldset" style="height:200px;"&gt;&lt;legend&gt;Login&lt;/legend&gt;'</span>;    
+    AppendStr+=<span class="hljs-string">'&lt;div id="msg" class="posit fontsize18 fontwidth700" style="width:380px;top:30px;left:10px;color:#FF1C1C;"&gt;&lt;/div&gt;'</span>;
+    <span class="hljs-comment">// ...</span>
+    $(<span class="hljs-string">'#body'</span>).html(AppendStr);
+</div></code></pre>
+<p>ReactJS則是提供了較容易開發的套件給網頁開發人員。</p>
+<pre class="hljs"><code><div><span class="hljs-keyword">import</span> react, { Component } <span class="hljs-keyword">from</span> <span class="hljs-string">'react'</span>;
+<span class="hljs-keyword">import</span> ReactDOM <span class="hljs-keyword">from</span> <span class="hljs-string">'react-dom'</span>;
+
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">App</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Component</span> </span>{
+    render() {
+        <span class="hljs-keyword">return</span> (
+            <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">className</span>=<span class="hljs-string">"posit switch-fiel"</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-name">fieldset</span>&gt;</span>
+                    {'...'}
+                <span class="hljs-tag">&lt;/<span class="hljs-name">fieldset</span>&gt;</span>
+            <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span>
+        );
+    }
+}
+ReactDOM.render(<span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">App</span> /&gt;</span>, document.getElementById('root'));
+</span></div></code></pre>
+<h4 id="getting-start">- Getting start</h4>
+<blockquote>
+<p>本篇文章僅記錄環境架設流程與基本概念</p>
+</blockquote>
+<ol>
+<li>
+<p>安裝 <a href="https://nodejs.org">Node.js</a>
+windows環境在安裝 Node.js時同時也會安裝 npm
+其他環境可以參考 <a href="https://nodejs.org/en/download/package-manager/">Node.js package manager</a></p>
+</li>
+<li>
+<p>安裝完成後可以透過 terminal 檢查是否安裝成功</p>
+</li>
+</ol>
+<div style="background-color:DimGray;width:330px;height:90px;border-radius:5px;border-style:ridge;margin-left:30px;font-weight:bold;color:white;">
+<pre style="font-family:Consolas,monaco,monospace;font-size: 14px; font-style: normal; font-variant: normal;font-weight: 400; line-height: 20px;">
+cyp@cyp-virtual-machine:~$ node -v
+cyp@cyp-virtual-machine:~$ npm -v
+cyp@cyp-virtual-machine:~$ npx -v
+</pre></div>
+<blockquote>
+<p><em>npx comes with npm 5.2+ and higher, see <a href="https://gist.github.com/gaearon/4064d3c23a77c74a3614c498a8bb1c5f">instructions for older npm versions</a></em></p>
+</blockquote>
+<ol start="3">
+<li><code>create-react-app</code>，這個 sample 中的<code>package.json</code>能幫我們快速的建好 ReactJS project 環境。<code>package.json</code>中會記錄該安裝哪些套件，透過<code>npm install</code>指令可以一次性的全部安裝完畢 (關於npm的其他指令用法，請<a href="https://docs.npmjs.com/cli/npm">參考</a>)。請在terminal 執行這些指令 (關於其他透過 create-react-app 初始化專案的方法，請<a href="https://github.com/facebook/create-react-app">參考</a>):</li>
+</ol>
+<div style="background-color:DimGray;width:500px;height:90px;border-radius:5px;border-style:ridge;margin-left:30px;font-weight:bold;color:white;">
+<pre style="font-family:Consolas,monaco,monospace;font-size: 14px; font-style: normal; font-variant: normal;font-weight: 400; line-height: 20px;">
+cyp@cyp-virtual-machine:~$ npx create-react-app my-app
+cyp@cyp-virtual-machine:~$ cd my-app
+cyp@cyp-virtual-machine:~$ npm install -dev @babel/core
+</pre></div>
+<ol start="4">
+<li>ReactJS 開發時使用的 Javascript 版本為 <strong>&quot;ECMAScript 2015, ES6&quot;</strong> ，目前幾乎所有瀏覽器都已經支援 ES6 版本，更新的 ES7 目前只有 Chrome 和 Opera 瀏覽器支援。取代原本的<code>var package = require('package');</code>模塊引入方法，採用新的<code>import/export</code>來導入/導出 module。這邊舉出 <a href="http://es6-features.org/#ValueExportImport">ES6-Features</a> 文件上的範例:</li>
+</ol>
+<pre class="hljs"><code><div><span class="hljs-comment">// ES6</span>
+<span class="hljs-comment">//  lib/math.js</span>
+<span class="hljs-keyword">export</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">sum</span> (<span class="hljs-params">x, y</span>) </span>{ <span class="hljs-keyword">return</span> x + y }
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">var</span> pi = <span class="hljs-number">3.141593</span>
+
+<span class="hljs-comment">//  someApp.js</span>
+<span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> math <span class="hljs-keyword">from</span> <span class="hljs-string">"lib/math"</span>
+<span class="hljs-built_in">console</span>.log(<span class="hljs-string">"2π = "</span> + math.sum(math.pi, math.pi))
+
+<span class="hljs-comment">//  otherApp.js</span>
+<span class="hljs-keyword">import</span> { sum, pi } <span class="hljs-keyword">from</span> <span class="hljs-string">"lib/math"</span>
+<span class="hljs-built_in">console</span>.log(<span class="hljs-string">"2π = "</span> + sum(pi, pi))
+</div></code></pre>
+<ol start="5">
+<li>在我們新建好的專案資料夾中，其目錄架構與用途:</li>
+</ol>
+<div style="background-color:DimGray;width:530px;height:370px;border-radius:5px;border-style:ridge;margin-left:30px;font-weight:bold;color:white;">
+<pre style="font-family:Consolas,monaco,monospace;font-size: 14px; font-style: normal; font-variant: normal;font-weight: 400; line-height: 20px;">
+my-app
+├── README.md               專案文件
+├── node_modules            使用 npm install 安裝產生的資料夾
+├── package.json            儲存目前專案的基本資料
+├── .gitignore              使用 git 做版本控制時忽略的檔案類型
+├── public                  網站需要公開的檔案
+│   ├── favicon.ico             網站的 icon
+│   ├── index.html              網站的唯一頁面
+│   └── manifest.json           網站基本資料
+└── src                     網站的 source code
+    ├── App.css                 開發 App.js 時需要的 css style
+    ├── App.js                  主要選染的 App Component 程式碼
+    ├── App.test.js             渲染 App 的測試程式
+    ├── index.css               開發 index.js 時需要的 css style
+    ├── index.js                執行渲染動作的程式碼
+    ├── logo.svg                
+    └── serviceWorker.js        
+</pre></div>
+<h3 id="%E6%A6%82%E5%BF%B5%E4%B8%80-component">概念一: <strong>Component</strong></h3>
+<p>使用ReactJS開發的網頁會被分為好幾個 <em>&quot;Component&quot;</em>，通常以ReactJS開發的網頁應用只有一個 html 頁面，也只會有一個 Component 會被渲染在這個頁面上，如同 <code>example1.js</code>程式碼所表達的。</p>
+<pre class="hljs"><code><div><span class="hljs-comment">// example1.js</span>
+<span class="hljs-keyword">import</span> react, { Component } <span class="hljs-keyword">from</span> <span class="hljs-string">'react'</span>;
+<span class="hljs-keyword">import</span> ReactDOM <span class="hljs-keyword">from</span> <span class="hljs-string">'react-dom'</span>;
+
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Component1</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Component</span> </span>{
+    render() {
+        <span class="hljs-keyword">return</span> (<span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">h1</span>&gt;</span>Hello<span class="hljs-tag">&lt;/<span class="hljs-name">h1</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span>);
+    }
+}
+
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Component2</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Component</span> </span>{
+    render() {
+        <span class="hljs-keyword">return</span> (<span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">h2</span>&gt;</span>World!<span class="hljs-tag">&lt;/<span class="hljs-name">h2</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span>);
+    }
+}
+
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">App</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Component</span> </span>{
+    render() {
+        <span class="hljs-keyword">return</span> (
+            <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-name">Component1</span>/&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-name">Component2</span>/&gt;</span>
+            <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span>
+        );
+    }
+}
+ReactDOM.render(<span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">App</span> /&gt;</span>, document.getElementById('root'));
+</span></div></code></pre>
+<p>雖然只有單一頁面，但可以根據狀況不同來顯示不同內容，這也牽涉到另一個基本概念 <strong>state</strong>。</p>
+<h3 id="%E6%A6%82%E5%BF%B5%E4%BA%8C-state-and-lifecycle">概念二: <strong>State and Lifecycle</strong></h3>
+<p>我們可以將 component 的狀態記錄在 <strong>state</strong> 物件裡面，並透過<code>setState()</code>方法去更新 state。透過 <code>setState</code>去做狀態更新時，ReactDOM會計算需要改動的部分並自動重新渲染，可能是一行字、標籤頁的切換、或是刷新整個頁面。為了因應 state 的概念，component 的內部也提供了許多預設方法可供 overwrite，來客製當 component 將要改變、改變之後等等時機點的動作。<code>example2.js</code>示範了如何透過 state 改變網頁呈現的內容。</p>
+<pre class="hljs"><code><div><span class="hljs-comment">// example2.js</span>
+<span class="hljs-keyword">import</span> react, { Component } <span class="hljs-keyword">from</span> <span class="hljs-string">'react'</span>;
+<span class="hljs-keyword">import</span> ReactDOM <span class="hljs-keyword">from</span> <span class="hljs-string">'react-dom'</span>;
+
+<span class="hljs-keyword">const</span> OnTitle = <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> (<span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">h2</span>&gt;</span>Turn the Light on!<span class="hljs-tag">&lt;/<span class="hljs-name">h2</span>&gt;</span></span>);  <span class="hljs-comment">// Arrow function</span>
+<span class="hljs-keyword">const</span> OffTitle = <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> (<span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">h2</span>&gt;</span>Turn the Light off!<span class="hljs-tag">&lt;/<span class="hljs-name">h2</span>&gt;</span></span>);  
+
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">App</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Component</span> </span>{
+    <span class="hljs-keyword">constructor</span>(props) { <span class="hljs-comment">// lifecycle method</span>
+        <span class="hljs-comment">// we can't user this here.</span>
+        <span class="hljs-keyword">super</span>(props);
+        <span class="hljs-comment">// Don't use this.setState() to initiate state here!</span>
+        <span class="hljs-keyword">this</span>.state = {
+            <span class="hljs-attr">on</span>: <span class="hljs-literal">false</span>
+        };
+        <span class="hljs-keyword">this</span>.updatePage = <span class="hljs-keyword">this</span>.updatePage.bind(<span class="hljs-keyword">this</span>);
+    }
+    componentDidMount() { <span class="hljs-comment">// lifecycle method</span>
+        setTimeout(<span class="hljs-keyword">this</span>.updatePage, <span class="hljs-number">3000</span>);
+    }
+    updatePage(){
+        <span class="hljs-comment">// Don't directly assign this.state after leaving constructor!</span>
+        <span class="hljs-keyword">this</span>.setState( { <span class="hljs-attr">on</span>: !<span class="hljs-keyword">this</span>.state.on } );
+        setTimeout(<span class="hljs-keyword">this</span>.updatePage, <span class="hljs-number">3000</span>);
+    }
+    render() { <span class="hljs-comment">// lifecycle method</span>
+        <span class="hljs-keyword">return</span> (
+            <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>
+                {(this.state.on) ? <span class="hljs-tag">&lt;<span class="hljs-name">OnTitle</span> /&gt;</span> : <span class="hljs-tag">&lt;<span class="hljs-name">OffTitle</span> /&gt;</span>}
+            <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span>
+        );
+    }
+}
+
+ReactDOM.render(<span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">App</span> /&gt;</span>, document.getElementById('root'));
+</span></div></code></pre>
+<p>這個範例用途是每隔三秒改變網頁一行字的簡單程式碼，但已經包含了一些ReactJS重要的概念，現在一一介紹</p>
+<ul>
+<li><strong>Arror function -</strong> 另外一種宣告函式的方法，效果大致和一般的函式宣告相同。箭頭後面接大括號代表要函式內執行的程式碼，後面接小括號代表函式直接回傳的內容。</li>
+</ul>
+<blockquote>
+<p>如果要渲染某個 function 或 component的回傳值，其名稱必須以大寫字母開頭</p>
+</blockquote>
+<ul>
+<li><strong>Lifecycle -</strong> <a href="https://reactjs.org/docs/react-component.html">component的生命週期</a>，代表當頁面發生某些事件時，哪些方法(<em>lifecycle method</em>)會被以怎樣的順序執行。範例中已經 overwrite 了一系列完整的「<strong>安裝生命週期方法</strong>」，一個安裝生命週期的方法執行順序如下: <code>constructor()</code>→<code>render()</code>→<code>componentDidMount()</code>。我們複寫這三個方法的內容為:
+<ul>
+<li><code>constructor()</code>
+<ol>
+<li>使用<code>super(props)</code>初始化<code>this</code>與<code>this.props</code>。ES6的<code>subclass</code>物件可以不需要有constructor，一旦使用constructor，必須使用<code>super()</code>。props的概念將會在稍後提到。</li>
+<li>初始化 state，為一個擁有的 &quot;on&quot; 屬性為 <code>true</code>的物件。<strong>在<code>constructor()</code>中，直接 assign 狀態的值；離開<code>constructor()</code>後，使用<code>this.setState()</code>來更新狀態</strong>。</li>
+<li>將<code>updatePage()</code>函式與 component 綁定，否則<code>updatePage()</code>無法知道自己與component之間的關係，也就無法讀取到 state (<em>component 中的 <em><strong>Arrow function</strong></em> 會自動綁定</em>)。</li>
+</ol>
+</li>
+<li><code>render()</code>
+在<code>render()</code>方法中必須包含一個回傳值，並避免在<code>render()</code>方法中更新任何狀態。若要在html物件中夾帶程式碼(包含條件判斷、變數等等)，需要使用大括號來表達。此範例會在狀態不同的情況下選染不同的標題字串。</li>
+<li><code>componentDidMount()</code>
+複寫此方法，使得在渲染完成後，使用<code>setTimeout()</code>來讓<code>updatePage()</code>於一段時間後執行。</li>
+</ul>
+</li>
+</ul>
+<h3 id="%E6%A6%82%E5%BF%B5%E4%B8%89-properties">概念三: <strong>Properties</strong></h3>
+
+</body>
+</html>
