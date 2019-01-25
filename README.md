@@ -296,7 +296,9 @@ __其他設定:__
 ```
 npm install --save aws-amplify aws-amplify-react amazon-cognito-identity-js
 ```
+
 2. 在`.js`檔中導入模塊，並在程式碼中設定好配置。  
+
 ```javascript
 import Amplify, { Auth } from 'aws-amplify';
 Amplify.configure({
@@ -309,7 +311,9 @@ Amplify.configure({
     }
 });
 ```
+
 3. 準備登入用的component。帳號密碼的取得方式通常是靠圖形介面讓使用者輸入，在這裡先忽略。如果有需要帳號密碼以外的登入資訊需求，自行在程式碼和網頁介面中增加就可以了。
+
 ```javascript
 import React, { Component } from 'react';
 class Login extends Component {
@@ -346,6 +350,7 @@ class Login extends Component {
     }
 }
 ```
+
 在這段程式碼中我們做了幾件事:  
 - [x] 初始化 component 狀態，在狀態中增加`username`、`password`、`cognito_user`、`cognito_session`四種屬性。`username` 和 `password`用來儲存從使用者介面或外部得到的帳號密碼，`cognito_user` 包含一些使用者狀態，`cognito_session`包含一些用來存取其他 AWS 服務的憑證，例如 _JSON Web Token, JWT_。
 - [x] 加入一個可以被觸發的"__非同步函式__"，這個函式會呼叫`Auth.signIn()`這個方法。這個方法"承諾"一定會 (可能不是馬上) 回傳一個結果(請參考 [Promise](https://developer.mozilla.org/zh-TW/docs/Web/JavaScript/Reference/Global_Objects/Promise))。為了應付這種需要等待的狀況，可以透過`async`運算子去表達一個函式為非同步函式，被表達為"非同步"的函式能夠在內部使用`await`運算子，去等待承諾函式的回傳值。
