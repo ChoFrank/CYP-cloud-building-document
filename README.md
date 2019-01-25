@@ -201,30 +201,30 @@ __其他設定:__
     </tr>
     <tr>
         <td><code>Attributes</code></td>
-        <td><ul>
+        <td>
         <li><code>Username</code>: 決定可以用什麼個人資料登入，例如電子郵件、電話、自定等等</li>
         <li><code>Standard Attributes</code>: 決定註冊時需要哪些使用者基本資料(標準)</li>
-        <li><code>Custom Attributes</code>: 自訂所需要的註冊基本資料</li></ul></td>
+        <li><code>Custom Attributes</code>: 自訂所需要的註冊基本資料</li></td>
     </tr>
     <tr>
         <td><code>Policies</code></td>
-        <td><ul>
+        <td>
         <li><code>Password Policy</code>: 定義密碼強度需求</li>
         <li><code>Allow Sign-up</code>: 使用者能自行註冊或只允許管理這增加使用者</li>
-        <li><code>Expiration</code>: 定義由管理員創建的帳號多久會過期</li></ul></td>
+        <li><code>Expiration</code>: 定義由管理員創建的帳號多久會過期</li></td>
     </tr>
     <tr>
         <td><code>MFA and Verification</code></td>
-        <td><ul>
+        <td>
         <li><code>Enable/Disable</code>: 開啟/關閉多方驗證功能</li>
         <li><code>Verification Attributes</code>: 決定驗證手段</li>
-        <li><code>Verification Role</code>: 定義執行驗證動作的執行角色</li></ul></td>
+        <li><code>Verification Role</code>: 定義執行驗證動作的執行角色</li></td>
     </tr>
     <tr>
         <td><code>Message customizations</code></td>
-        <td><ul>
+        <td>
         <li><code>Verification message</code>: 自訂郵件驗證訊息</li>
-        <li><code>Invitation message</code>: 自訂郵件邀請訊息</li></ul></td>
+        <li><code>Invitation message</code>: 自訂郵件邀請訊息</li></td>
     </tr>
     <tr>
         <td><code>Tags</code></td>
@@ -240,17 +240,17 @@ __其他設定:__
     </tr>
     <tr>
         <td><code>Triggers</code></td>
-        <td><ul>
-        <li><code>Pre Sign-up</code>: 使用Lambda function 自訂註冊工作流程</li>  
-        <li><code>Pre Authentication</code>: 使用 Lambda function 自訂認證(登入)工作流程</li>  
-        <li><code>Custom Message</code>: 使用 Lambda function 自訂校驗或多方驗證訊息</li>  
-        <li><code>Post Authentication</code>: 使用 Lambda function 自訂登入後的工作流程</li>  
-        <li><code>Post Confirmation</code>: 使用 Lambda function 自訂校驗使用者後的工作流程</li>  
-        <li><code>Define Auth Challenge</code>: 使用 Lambda function 初始化客製的認證流程</li>  
-        <li><code>Create Auth Challenge</code>: 使用 Lambda function 創建認證時的 challenge，會在 "Define Auth Challenge" 後被呼叫</li>  
-        <li><code>Verify Auth Challenge Response</code>: 使用 Lambda function 校驗使用者對 challenge 的回應</li>  
-        <li><code>User Migration</code>: 使用 Lambda function 自訂登入或忘記密碼時的工作流程</li>  
-        <li><code>Pre Token Generation</code>: 使用 Lambda function 自訂權杖的產生流程</li></ul></td> 
+        <td>
+        <li><code>Pre Sign-up</code>: 使用Lambda function 自訂註冊工作流程</li><br>
+        <li><code>Pre Authentication</code>: 使用 Lambda function 自訂認證(登入)工作流程</li><br>  
+        <li><code>Custom Message</code>: 使用 Lambda function 自訂校驗或多方驗證訊息</li> <br> 
+        <li><code>Post Authentication</code>: 使用 Lambda function 自訂登入後的工作流程</li><br>  
+        <li><code>Post Confirmation</code>: 使用 Lambda function 自訂校驗使用者後的工作流程</li><br>  
+        <li><code>Define Auth Challenge</code>: 使用 Lambda function 初始化客製的認證流程</li> <br> 
+        <li><code>Create Auth Challenge</code>: 使用 Lambda function 創建認證時的 challenge，會在 "Define Auth Challenge" 後被呼叫</li> <br> 
+        <li><code>Verify Auth Challenge Response</code>: 使用 Lambda function 校驗使用者對 challenge 的回應</li><br>  
+        <li><code>User Migration</code>: 使用 Lambda function 自訂登入或忘記密碼時的工作流程</li><br>  
+        <li><code>Pre Token Generation</code>: 使用 Lambda function 自訂權杖的產生流程</li></td> 
     </tr>
 </table>
 
