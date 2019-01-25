@@ -202,28 +202,28 @@ __其他設定:__
     <tr>
         <td><code>Attributes</code></td>
         <td>
-        <li><code>Username</code>: 決定可以用什麼個人資料登入，例如電子郵件、電話、自定等等</li>
-        <li><code>Standard Attributes</code>: 決定註冊時需要哪些使用者基本資料(標準)</li>
+        <li><code>Username</code>: 決定可以用什麼個人資料登入，例如電子郵件、電話、自定等等</li><br> 
+        <li><code>Standard Attributes</code>: 決定註冊時需要哪些使用者基本資料(標準)</li><br> 
         <li><code>Custom Attributes</code>: 自訂所需要的註冊基本資料</li></td>
     </tr>
     <tr>
         <td><code>Policies</code></td>
         <td>
-        <li><code>Password Policy</code>: 定義密碼強度需求</li>
-        <li><code>Allow Sign-up</code>: 使用者能自行註冊或只允許管理這增加使用者</li>
+        <li><code>Password Policy</code>: 定義密碼強度需求</li><br> 
+        <li><code>Allow Sign-up</code>: 使用者能自行註冊或只允許管理這增加使用者</li><br> 
         <li><code>Expiration</code>: 定義由管理員創建的帳號多久會過期</li></td>
     </tr>
     <tr>
         <td><code>MFA and Verification</code></td>
         <td>
-        <li><code>Enable/Disable</code>: 開啟/關閉多方驗證功能</li>
-        <li><code>Verification Attributes</code>: 決定驗證手段</li>
+        <li><code>Enable/Disable</code>: 開啟/關閉多方驗證功能</li><br> 
+        <li><code>Verification Attributes</code>: 決定驗證手段</li><br> 
         <li><code>Verification Role</code>: 定義執行驗證動作的執行角色</li></td>
     </tr>
     <tr>
         <td><code>Message customizations</code></td>
         <td>
-        <li><code>Verification message</code>: 自訂郵件驗證訊息</li>
+        <li><code>Verification message</code>: 自訂郵件驗證訊息</li><br> 
         <li><code>Invitation message</code>: 自訂郵件邀請訊息</li></td>
     </tr>
     <tr>
