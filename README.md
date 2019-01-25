@@ -616,8 +616,8 @@ __次要索引__ ( Secondary Index ) 不是必須使用的功能，是可以在�
 為了這種應用情境，兩種次要索引誕生了，分別是 __本機次要索引 ( Local Secondary Index, LSI )__ 和 __全域次要索引 ( Global Secondary Index )__。次要索引的可以簡單把它看作另一個資料表，就像我們原本的資料表的一部份分身，它們複製一部分原資料表的欄位 ( 屬性 )。  
 
 兩種次要索引最主要的不同是:
- - LSI 可以和原資料表有不同的 __排序鍵 ( sort key )__，但需要和原資料表擁有一樣的分區鍵，這和分區鍵的用途有關，也是為什麼被它叫做「本機」次要索引。使用 LSI 可以讓我們只擷取部分原資料表中的物件，並省去排序的功夫。LSI 有 10GB 大小限制。
-  - GSI 可以和原資料表有  __不同的分區鍵與排序鍵__，這讓次要索引的設計彈性增加。GSI 沒有大小限制，但通常以 10GB 區分應使用 LSI 或是 GSI。
+- LSI 可以和原資料表有不同的 __排序鍵 ( sort key )__，但需要和原資料表擁有一樣的分區鍵，這和分區鍵的用途有關，也是為什麼被它叫做「本機」次要索引。使用 LSI 可以讓我們只擷取部分原資料表中的物件，並省去排序的功夫。LSI 有 10GB 大小限制。
+- GSI 可以和原資料表有  __不同的分區鍵與排序鍵__，這讓次要索引的設計彈性增加。GSI 沒有大小限制，但通常以 10GB 區分應使用 LSI 或是 GSI。
 
 應用程式對次要索引的所有資料更新，都會自動應用在原資料表上。這並非是 __強一致性 ( Strong Consistency )__ 的操作，而是 __最終一致性 ( Eventually Consistency )__ 操作，換句話說，更新並不會馬上反應到所有資料表和索引上。
 
@@ -777,7 +777,7 @@ class CreateDevice extends Component {
 ```javascript
 AWS.config.credentials.get((err) => {
     if (!err) {
-        var ddbclient = new AWS.DynamoDB.DocumentClient({ region: AWS.config.region });
+        const ddbclient = new AWS.DynamoDB.DocumentClient({ region: AWS.config.region });
         var params = {
             TableName: 'device',
             ProjectionExpression: 'id, model, nickname, version'
@@ -804,8 +804,85 @@ AWS.config.credentials.get((err) => {
 });
 ```
 
+### Additional Topic #2: 使用 FilterExpression 過濾回傳掃描的結果
 
----
+```javascript
+AWS.config.credentials.get((err) => {
+    const ddbclient = new AWS.DynamoDB.DocumentClient({ region: AWS.config.region });
+    var params = {
+        TableName: 'device',
+        ProjectionExpression: 'id, nickname, model, version',
+        FilterExpression: '#user = :uuuu',
+        ExpressionAttributeNames: {
+            '#user': "user"
+        },
+        ExpressionAttributeValues: {
+            ":uuuu": this.props.getUser().username,
+        } 
+    }
+    ddbclient.scan(params, (err, data) => {
+        if (!err) {
+            let i = 1;
+            data.Items.forEach(device => {
+                dataSource.push({
+                    key: i.toString(),
+                    mac: device.id,
+                    nickname: device.nickname,
+                    model: device.model,
+                    version: device.version,
+                });
+                i += 1;
+                this.setState( { dataSource } );
+            });
+        } else {
+            alert(err);
+        }
+    });
+});
+```
+
+### Additional Topic #3: 使用 Query 擷取全域資料表
+
+```javascript
+AWS.config.credentials.get((err) => {
+    const ddbclient = new AWS.DynamoDB.DocumentClient({ region: AWS.config.region });
+    var params = {
+        TableName: 'device',
+        IndexName: "user-model-index",
+        ProjectionExpression: 'id, nickname, model, version',
+        KeyConditionExpression: '#user = :uuuu',
+        ExpressionAttributeNames: {
+            '#user': "user"
+        },
+        ExpressionAttributeValues: {
+            ":uuuu": this.props.getUser().username,
+        } 
+    }
+    ddbclient.query(params, (err, data) => {
+        if (!err) {
+            let i = 1;
+            data.Items.forEach(device => {
+                dataSource.push({
+                    key: i.toString(),
+                    mac: device.id,
+                    nickname: device.nickname,
+                    model: device.model,
+                    version: device.version,
+                });
+                i += 1;
+                this.setState( { dataSource } );
+            });
+        } else {
+            alert(err);
+            if (err.toString().search('Token expired') !== -1) {
+                this.props.setAuthenticatedUser(null);
+            }
+        }
+    });
+});
+```
+
+---  
 
 <a id="step-lambda"></a>
 
