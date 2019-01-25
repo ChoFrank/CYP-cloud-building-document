@@ -365,6 +365,7 @@ class Login extends Component {
 #### - Getting start
 
 1. 準備重設密碼的 component。為此，我們準備了一組新密碼和重複確認密碼，還要包含登入成功時的使用者物件，這在接下來會使用到。
+
 ```javascript
 import React, { Component } from 'react';
 import Amplify, { Auth } from 'aws-amplify';
@@ -379,7 +380,9 @@ class ResetPassword extends Component {
     }
 }
 ```
+
 2. 建立處理重設密碼的函式。
+
 ```javascript
 class ResetPassword extends Component {
     constructor(props) {
@@ -406,6 +409,7 @@ class ResetPassword extends Component {
     }
 }
 ```
+
 這段程式碼宣告了一個非同步函式`resetPassword()`，當新密碼確認無誤後，呼叫一個`Auth.completeNewPassword()`方法來完成新密碼的設定。要取得這個方法的回傳值同樣需要等待一段時間，我們使用了另一種等待手段`then()`。`then()`需要帶入一個回呼函式 (callback) 作為參數，當前面的承諾函式完成時，觸發回呼函式的動作。
 
 ---
@@ -415,6 +419,7 @@ class ResetPassword extends Component {
 AWS Amplify 提供了 API 來讓網頁應用可以處理使用者自行註冊的動作。整個 cognito user 的註冊過程分為兩階段: 「註冊」→「確認」。以下範例會實際示範這兩個步驟:
 
 1. `Auth.signUp()`方法，向 cognito 發出註冊使用者請求。
+
 ```javascript
 handleRegister = async () => {
     try {
@@ -432,9 +437,11 @@ handleRegister = async () => {
     }
 }
 ```
+
 `Auth.signUp()`方法使用起來很簡單，只要帶入一個包含帳號密碼屬性的物件作為參數即可。如果需要其他註冊資訊，請加在`attributes`參數之中，如同範例註解。注意如果使用者集區設定有勾選「Allow email address」，這邊的 username 需要帶入電子郵件。
 
 2. `Auth.confirmSignUp()`方法，透過寄送到電子郵件信箱的驗證碼，確認使用者身分。
+
 ```javascript
 handleConfirmRegister = async () => {
     try {
@@ -447,6 +454,7 @@ handleConfirmRegister = async () => {
     }
 }
 ```
+
 `Auth.confirmSignUp()`方法使用起來同樣不難，主要帶入兩個參數: 剛才註冊用的使用者名稱和使用者收到的電子郵件驗證碼。如果驗證成功，這個方法會回傳"SUCCESS"字串。
 
 ---
@@ -486,13 +494,17 @@ AWS將儲存的內容交付給網頁訪客後，所有程式碼皆在客戶端 (
 > 注意不要直接將`build`資料夾上傳，而是要上傳`build`資料夾的內容。
 
 - Windows
+
 ```
 aws s3 sync "C:\path\of\reactapp\build\" s3://MY_S3_BUCKET_NAME/ --profile my-default-profile
 ```
+
 - OS X / Linux
+
 ```
 aws s3 sync "/path/of/reactapp/build/" s3://MY_S3_BUCKET_NAME/ --profile my-default-profile
 ```
+
 ![](/images/upload-s3-success.png)
 
 5. 上傳/同步成功後，可以在`S3`主控台介面點選 bucket 查看裡面有哪些檔案。在上面的分頁欄選擇「Properties」→「Static Website hosting」→ 勾選「Use this bucket to host a website」
@@ -506,6 +518,7 @@ aws s3 sync "/path/of/reactapp/build/" s3://MY_S3_BUCKET_NAME/ --profile my-defa
 
 
 8. 同樣在「Permissions」 分頁 → 選擇「Bucket Policy」→ 在下方文字區域填入以下政策 → 點選「Save」儲存。__注意下方 `YOUR_BUCKET_NAME` 部分要更換成 bucket 名稱__
+
 ```
 {
     "Version": "2012-10-17",
@@ -520,6 +533,7 @@ aws s3 sync "/path/of/reactapp/build/" s3://MY_S3_BUCKET_NAME/ --profile my-defa
     ]
 }
 ```
+
 ![](/images/set-bucket-policy.png)
 
 在「Properties」→「Static website hosting」可以查看託管網頁的 endpoint，點選可以前往剛剛建立的網頁應用。
@@ -558,6 +572,7 @@ Amazon DynamoDB 的讀寫動作由 __Read Capacity Unit, RCU__ 和 __Write Capac
 
 ### Database Components
 Amazon DynamoDB 由 __Table, item, 和 attirbutes__ 組成。Table 是 item 形成的集合，item 是 attributes 形成的集合。每個 item 的大小上限為 400 KB，這包含了鍵名稱字串與鍵值。
+
 ```
 table: 
     item1:
@@ -567,6 +582,7 @@ table:
     item2:
         ...
 ```
+
 <p align="center"><img src="/images/ddb-components.png"></p>  
 
 ### Data Type
@@ -646,6 +662,7 @@ __次要索引__ ( Secondary Index ) 不是必須使用的功能，是可以在�
 </table>
 
 1. 宣告一個`rand()`函式，讓我們能隨機產生這些屬性值
+
 ```javascript
 function rand(type) {
     var ret = [];
@@ -677,8 +694,10 @@ function rand(type) {
     }
 }
 ```
+
 2. 使用`npm install --save aws-sdk`安裝 AWS JavaScript SDK 模塊。
 3. 宣告用來 create item 的 component，利用[生命週期函式](#concept-state-lifecycle)`componentDidMount()`來在 component 準備好的時候將之前 [Cognito 登入](#add-topic-nodejs-cognito-login)成功得到的 session 載入到 AWS SDK 中。要小心即使登入成功，user 和 session 卻尚未載入的情況。
+
 ```javascript
 import React, { Component } from 'react';
 import AWS from 'aws-sdk';
@@ -700,7 +719,9 @@ class CreateDevice extends Component {
     }
 } 
 ```
+
 4. 在 component 中宣告一個在 table 中加入 item 的函式`create()`，這個新 item 的屬性值為隨機產生。
+
 ```javascript
 class CreateDevice extends Component {
     // ...
@@ -732,7 +753,9 @@ class CreateDevice extends Component {
     }
 }
 ```
+
 5. 建立一個按鈕在網頁上，這個按鈕會觸發`create()`函式。
+
 ```javascript
 class CreateDevice extends Component {
     render() {
@@ -745,6 +768,7 @@ class CreateDevice extends Component {
     }
 }
 ```
+
 ![](/images/create-item-success.png)
 
 
@@ -790,6 +814,7 @@ AWS.config.credentials.get((err) => {
 ### Cognito Post-Confirm Trigger
 1. Enable `Cognito Sync Trigger`，選擇 identity pool。  
 2. 
+
 ```javascript
 var aws = require('aws-sdk');
 
@@ -857,7 +882,9 @@ AppendStr+='<div id="msg" class="posit fontsize18 fontwidth700" style="width:380
 // ...
 $('#body').html(AppendStr);
 ```
+
 ReactJS則是提供了較容易開發的套件給網頁開發人員。
+
 ```javascript
 import react, { Component } from 'react';
 import ReactDOM from 'react-dom';
@@ -893,6 +920,7 @@ cyp@cyp-virtual-machine:~$ npx -v
 > _npx comes with npm 5.2+ and higher, see [instructions for older npm versions](https://gist.github.com/gaearon/4064d3c23a77c74a3614c498a8bb1c5f)_
 
 3. `create-react-app`，這個 sample 中的`package.json`能幫我們快速的建好 ReactJS project 環境。`package.json`中會記錄該安裝哪些套件，透過`npm install`指令可以一次性的全部安裝完畢 (關於npm的其他指令用法，請[參考](https://docs.npmjs.com/cli/npm))。請在terminal 執行這些指令 (關於其他透過 create-react-app 初始化專案的方法，請[參考](https://github.com/facebook/create-react-app)):
+
 ```
 cyp@cyp-virtual-machine:~$ npx create-react-app my-app
 cyp@cyp-virtual-machine:~$ cd my-app
@@ -900,6 +928,7 @@ cyp@cyp-virtual-machine:~$ npm install -dev @babel/core
 ```
 
 4. ReactJS 開發時使用的 JavaScript 版本為 __"ECMAScript 2015, ES6"__ ，目前幾乎所有瀏覽器都已經支援 ES6 版本，更新的 ES7 目前只有 Chrome 和 Opera 瀏覽器支援。取代原本的`var package = require('package');`模塊引入方法，採用新的`import/export`來導入/導出 module。這邊舉出 [ES6-Features](http://es6-features.org/#ValueExportImport) 文件上的範例:
+
 ```javascript
 // ES6
 //  lib/math.js
@@ -940,6 +969,7 @@ my-app
 
 #### 概念一: Component
 使用ReactJS開發的網頁會被分為好幾個 _"Component"_，通常以ReactJS開發的網頁應用只有一個 html 頁面，也只會有一個 Component 會被渲染在這個頁面上，如同 `example1.js`程式碼所表達的。
+
 ```javascript
 // example1.js
 import react, { Component } from 'react';
@@ -969,12 +999,14 @@ class App extends Component {
 }
 ReactDOM.render(<App />, document.getElementById('root'));
 ```
+
 雖然只有單一頁面，但可以根據狀況不同來顯示不同內容，這也牽涉到另一個基本概念 __state__。
 
 ---
 <a id="concept-state-lifecycle"></a>
 #### 概念二: State and Lifecycle
 我們可以將 component 的狀態記錄在 __state__ 物件裡面，並透過`setState()`方法去更新 state。透過 `setState`去做狀態更新時，ReactDOM會計算需要改動的部分並自動重新渲染，可能是一行字、標籤頁的切換、或是刷新整個頁面。為了因應 state 的概念，component 的內部也提供了許多預設方法可供 overwrite，來客製當 component 將要改變、改變之後等等時機點的動作。`example2.js`示範了如何透過 state 改變網頁呈現的內容。
+
 ```javascript
 // example2.js
 import react, { Component } from 'react';
@@ -1012,6 +1044,7 @@ class App extends Component {
 
 ReactDOM.render(<App />, document.getElementById('root'));
 ```
+
 這個範例用途是每隔三秒改變網頁一行字的簡單程式碼，但已經包含了一些ReactJS重要的概念，現在一一介紹
 - __Arror function -__ 另外一種宣告函式的方法，效果大致和一般的函式宣告相同。參數的帶入方法為: `= (param1, param2, ...) =>`。箭頭後面接大括號代表要函式內執行的程式碼，後面接小括號代表函式直接回傳的內容。
 > 如果要渲染某個 function 或 component的回傳值，其名稱必須以大寫字母開頭
@@ -1030,6 +1063,7 @@ ReactDOM.render(<App />, document.getElementById('root'));
 
 #### 概念三: Properties
 既然 ReactJS 開發的網頁應用是由許多 component 組成，那麼 component 之間的訊息傳遞就是很重要的議題。在 ReactJS 中，我們會通過`Props`將 Parent component 的資訊傳給 child component。`example3.js`會示範如何使用`Props`
+
 ```javascript
 // example3.js
 import react, { Component } from 'react';
@@ -1056,6 +1090,7 @@ class App extends Component {
 }
 ReactDOM.render(<App />, document.getElementById('root'));
 ```
+
 在`example3.js`中，透過`props`我們將 App component 中的變數傳給 Parent component，Parent component 再將變數傳給 Child function。幾乎所有東西都能使用props傳遞，例如我們也能將函式透過`props`傳給 child，並在child component/function 執行這個函式。
 > 只要不去覆寫 `constructor()`，預設就能存取`this.props`
 
@@ -1063,6 +1098,7 @@ ReactDOM.render(<App />, document.getElementById('root'));
 
 #### 概念四: Context
 現在我們已經能靠 component、state、props 建構出很多應用。假設我們今天創造一個遊戲，內容是通關一些小遊戲，所有小遊戲的總分相加成為最後遊戲總分。照著前面三個概念，我們很容易架構出這樣的應用:
+
 ```javascript
 // example4.js
 import React, { Component } from 'react';
@@ -1097,6 +1133,7 @@ class App extends Component {
 <p align="center"><img src="/images/context-demo1.png"></p> 
 
 在`example4.js`中，`App`component 透過 props 將增加分數的函式傳給`LittleGame`component，讓他可以透過點擊按鍵得分，並且將總分顯示出來，非常簡單。但是當有`LittleGame2, LittleGame3, LittleGame4, ...`出現，我們的程式碼勢必會變成這樣，來將必需的內容傳給所有子組件:
+
 ```javascript
 class App extends Component {
     // ...
@@ -1114,12 +1151,14 @@ class App extends Component {
     }
 }
 ```
+
 在這種情況下，就符合 ReactJS 官方認為的`Context`使用時機。
 > https://reactjs.org/docs/context.html#before-you-use-context  
 > ## Before You Use Context  
 > Context is primarily used when some data needs to be accessible by many components at different nesting levels. Apply it sparingly because it makes component reuse more difficult.
 
-Context 就是為了應付要將內容傳遞給多個部件使用的情景。我們可以將`example4.js`改造成使用 context 的版本。
+Context 就是為了應付要將內容傳遞給多個部件使用的情景。我們可以將`example4.js`改造成使用 context 的版本。  
+ 
 ```javascript
 // example5.js
 import React, { Component } from 'react';
@@ -1156,6 +1195,7 @@ class App extends Component {
     }
 }
 ```
+
 從`example4.js`到`example5.js`總共經過幾個步驟:  
 1. 使用 `React.createContext()`創造一個含有上下文的容器，在範例中我們稱它為`ParentContext`。`createContext()`方法可以帶入參數作為容器的預設值，不過在範例中我們不需要用到。
 2. 在所有需要共享某些內容的子部件外，用`<Context.Provider value={ SOMETHING_WE_WANT_TO_SHARE }>`包覆。
