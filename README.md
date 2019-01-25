@@ -241,16 +241,16 @@ __其他設定:__
     <tr>
         <td><code>Triggers</code></td>
         <td>
-        <li><code>Pre Sign-up</code>: 使用Lambda function 自訂註冊工作流程</li>
-        <li><code>Pre Authentication</code>: 使用 Lambda function 自訂認證(登入)工作流程</li>
-        <li><code>Custom Message</code>: 使用 Lambda function 自訂校驗或多方驗證訊息</li>
-        <li><code>Post Authentication</code>: 使用 Lambda function 自訂登入後的工作流程</li>
-        <li><code>Post Confirmation</code>: 使用 Lambda function 自訂校驗使用者後的工作流程</li>
-        <li><code>Define Auth Challenge</code>: 使用 Lambda function 初始化客製的認證流程</li>
-        <li><code>Create Auth Challenge</code>: 使用 Lambda function 創建認證時的 challenge，會在 "Define Auth Challenge" 後被呼叫</li>
-        <li><code>Verify Auth Challenge Response</code>: 使用 Lambda function 校驗使用者對 challenge 的回應</li>
-        <li><code>User Migration</code>: 使用 Lambda function 自訂登入或忘記密碼時的工作流程</li>
-        <li><code>Pre Token Generation</code>: 使用 Lambda function 自訂權杖的產生流程</li></td>
+        <li><code>Pre Sign-up</code>: 使用Lambda function 自訂註冊工作流程</li>  
+        <li><code>Pre Authentication</code>: 使用 Lambda function 自訂認證(登入)工作流程</li>  
+        <li><code>Custom Message</code>: 使用 Lambda function 自訂校驗或多方驗證訊息</li>  
+        <li><code>Post Authentication</code>: 使用 Lambda function 自訂登入後的工作流程</li>  
+        <li><code>Post Confirmation</code>: 使用 Lambda function 自訂校驗使用者後的工作流程</li>  
+        <li><code>Define Auth Challenge</code>: 使用 Lambda function 初始化客製的認證流程</li>  
+        <li><code>Create Auth Challenge</code>: 使用 Lambda function 創建認證時的 challenge，會在 "Define Auth Challenge" 後被呼叫</li>  
+        <li><code>Verify Auth Challenge Response</code>: 使用 Lambda function 校驗使用者對 challenge 的回應</li>  
+        <li><code>User Migration</code>: 使用 Lambda function 自訂登入或忘記密碼時的工作流程</li>  
+        <li><code>Pre Token Generation</code>: 使用 Lambda function 自訂權杖的產生流程</li></td>  
     </tr>
 </table>
 
