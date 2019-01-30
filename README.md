@@ -353,7 +353,7 @@ class Login extends Component {
 
 在這段程式碼中我們做了幾件事:  
 - [x] 初始化 component 狀態，在狀態中增加`username`、`password`、`cognito_user`、`cognito_session`四種屬性。`username` 和 `password`用來儲存從使用者介面或外部得到的帳號密碼，`cognito_user` 包含一些使用者狀態，`cognito_session`包含一些用來存取其他 AWS 服務的憑證，例如 _JSON Web Token, JWT_。
-- [x] 加入一個可以被觸發的"__非同步函式__"，這個函式會呼叫`Auth.signIn()`這個方法。這個方法"承諾"一定會 (可能不是馬上) 回傳一個結果(請參考 [Promise](https://developer.mozilla.org/zh-TW/docs/Web/JavaScript/Reference/Global_Objects/Promise))。為了應付這種需要等待的狀況，可以透過`async`運算子去表達一個函式為非同步函式，被表達為"非同步"的函式能夠在內部使用`await`運算子，去等待承諾函式的回傳值。
+- [x] 加入一個可以被觸發的"__非同步函式__"，這個函式會呼叫`Auth.signIn()`這個方法。這個方法"承諾"一定會 (可能不是馬上) 回傳一個結果(請參考 [Async](#concept-javascript-async))。為了應付這種需要等待的狀況，可以透過`async`運算子去表達一個函式為非同步函式，被表達為"非同步"的函式能夠在內部使用`await`運算子，去等待承諾函式的回傳值。
 - [x] 根據`Auth.signIn()`的回傳值，我們可以知道這個使用者的驗證情形。在範例中我們只處理登入成功的情況，在登入成功後將使用者資訊和 session 更新到 component 的狀態中。
 
 > 若是之後需要處理其他驗證結果，例如需要多方驗證、需要新密碼等等，同樣在這個函式中處理
@@ -775,6 +775,7 @@ class CreateDevice extends Component {
 ### Additional Topic #1: 使用 JavaScript 掃描整個 table
 
 ```javascript
+let itemList = [];
 AWS.config.credentials.get((err) => {
     if (!err) {
         const ddbclient = new AWS.DynamoDB.DocumentClient({ region: AWS.config.region });
@@ -784,18 +785,16 @@ AWS.config.credentials.get((err) => {
         }
         ddbclient.scan(params, (err, data) => {
             if (!err) {
-                let i = 1;
-                data.Items.forEach(device => {
-                    dataSource.push({
-                        key: i.toString(),
+                data.Items.forEach((device, index) => {
+                    itemList.push({
+                        key: index.toString(),
                         mac: device.id,
                         nickname: device.nickname,
                         model: device.model,
                         version: device.version,
                     });
-                    i += 1;
-                    this.setState( { dataSource } );
                 });
+                console.log(itemList);    
             } else {
                 alert(err);
             }
@@ -807,6 +806,7 @@ AWS.config.credentials.get((err) => {
 ### Additional Topic #2: 使用 FilterExpression 過濾回傳掃描的結果
 
 ```javascript
+let itemList = [];
 AWS.config.credentials.get((err) => {
     const ddbclient = new AWS.DynamoDB.DocumentClient({ region: AWS.config.region });
     var params = {
@@ -822,18 +822,16 @@ AWS.config.credentials.get((err) => {
     }
     ddbclient.scan(params, (err, data) => {
         if (!err) {
-            let i = 1;
-            data.Items.forEach(device => {
-                dataSource.push({
-                    key: i.toString(),
+            data.Items.forEach((device, index) => {
+                itemList.push({
+                    key: index.toString(),
                     mac: device.id,
                     nickname: device.nickname,
                     model: device.model,
                     version: device.version,
                 });
-                i += 1;
-                this.setState( { dataSource } );
             });
+            console.log(itemList);
         } else {
             alert(err);
         }
@@ -844,6 +842,7 @@ AWS.config.credentials.get((err) => {
 ### Additional Topic #3: 使用 Query 擷取全域資料表
 
 ```javascript
+let itemList = [];
 AWS.config.credentials.get((err) => {
     const ddbclient = new AWS.DynamoDB.DocumentClient({ region: AWS.config.region });
     var params = {
@@ -860,27 +859,50 @@ AWS.config.credentials.get((err) => {
     }
     ddbclient.query(params, (err, data) => {
         if (!err) {
-            let i = 1;
-            data.Items.forEach(device => {
-                dataSource.push({
-                    key: i.toString(),
+            data.Items.forEach((device, index) => {
+                itemList.push({
+                    key: index.toString(),
                     mac: device.id,
                     nickname: device.nickname,
                     model: device.model,
                     version: device.version,
                 });
-                i += 1;
-                this.setState( { dataSource } );
             });
+            console.log(itemList);
         } else {
             alert(err);
-            if (err.toString().search('Token expired') !== -1) {
-                this.props.setAuthenticatedUser(null);
-            }
         }
     });
 });
 ```
+
+### Additional Topic #4: 使用 BatchWriteItem 一次修改/刪除數個 Item
+
+批次操作使用的參數格式和一般操作帶入的參數不同，格式為 `{ RequestItems: "YOUR_TABLE_NAME": [ {OBJECT1}, {OBJECT2}, ... ] }`，關於 request object 的格式可以參考附註或是範例。
+> https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/dynamodb-example-table-read-write-batch.html
+
+```javascript
+AWS.config.credentials.get((err) => {
+    if (!err) {
+        const ddbclient = new AWS.DynamoDB.DocumentClient({ region:AWS.config.region });
+        var params = {
+            RequestItems: {
+                device: this.state.selectedRowKeys.map((key) => {
+                    return { DeleteRequest: { Key: { id: this.tableGetItem(key).mac} };
+                }),
+            }
+        }
+        ddbclient.batchWrite(params, (error, data) => {
+            if (err) {
+                console.log("Batch write item error", error);
+            } else {
+                console.log("Item delete successfully!");
+            }
+        });
+    }
+});
+```
+
 
 ---  
 
@@ -1135,7 +1157,7 @@ ReactDOM.render(<App />, document.getElementById('root'));
     在`render()`方法中必須包含一個回傳值，並避免在`render()`方法中更新任何狀態。若要在html物件中夾帶程式碼(包含條件判斷、變數等等)，需要使用大括號來表達。此範例會在狀態不同的情況下選染不同的標題字串。
   - [x] ___componentDidMount()___  
     複寫此方法，使得在渲染完成後，使用`setTimeout()`來讓`updatePage()`於一段時間後執行。  
-    值得注意的是，`componentDidMount()`方法執行的時機點，__是在瀏覽器渲染內容完成，但尚未顯示給使用者看的時候__。我們經常會在這個方法中使用`setState()`方法去更新 component 的狀態，這可能造成兩次的渲染動作，但瀏覽器的讀者只會看到一次頁面刷新的現象。
+    值得注意的是，`componentDidMount()`方法執行的時機點，是在 __瀏覽器渲染內容完成後，但頁面還沒刷新__，因此只要`componentDidMount()`還沒執行完，瀏覽器就會一直顯示讀取狀態。我們經常會在這個方法中使用`setState()`方法去更新 component 的狀態，這可能造成兩次的渲染動作，但瀏覽器的讀者只會看到一次頁面刷新 (`componentDidMount()`) 的現象。
 
 ---
 
@@ -1282,3 +1304,149 @@ class App extends Component {
 需要注意的是，在官方文件中也提到 __"保守的"__ 使用context，因為使用context的部件很難被重複使用。
 
 ---
+
+<a id="concept-javascript-async"></a>
+#### 概念五: 非同步 ( Asynchronous )  
+在網頁應用中，經常會遇到需要等待讀取外來資源的情況。而在準備外部資源的同時，我們可以先執行其他工作來增加效率或是使用者體驗。例如在下面這段程式碼中，網頁只能等到 `request()` 工作完成才可以將內容呈現給訪客:
+
+```javascript
+// example6.js
+export default class App extends Component {
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            status: 'Waiting for data...'
+        };
+    }
+
+    componentDidMount() {
+        // request() will return "Data complete" in the future
+        this.setState( { status: request() } );
+    }
+
+    render() {
+        return (
+            <div style={{backgroundColor: '#0a1429', width: '100%', height: '100%', position: 'fixed', color: 'white'}}>
+                <h2>Promise demo</h2>
+                <h3>{this.state.status}</h3>
+            </div>
+        );
+    }
+};
+```
+
+![](/images/waiting-task-demo.gif)
+
+如果想增加效率或是使用者體驗，我們可以使用 __回呼 ( callback )__ 函式。在 JavaScript 中一個常用的方法  
+`setTimeout( handler, timeout [, arguments = [] ] ):number` 可以讓我們在一段 timeout 之後執行某個回呼函式，並且當下不會被 block 住。根據這個特性，我們修改 `example6.js` 裡面的 `componenetDidMount()` 生命週期方法內容為，使用者就能知道現在的網頁狀態:
+
+```javascript
+componentDidMount() {
+    // request() will be asynchronously executed after 0 ms
+    setTimeout(() => {
+        this.setState( { status: request() } );
+    }, 0);
+}
+```
+
+![](/images/set-timeout-demo.gif)
+> `setTimeout()` 所帶入的函式並非平行的 ( parallel ) 被執行。換句話說，`setTimeout` 有非同步的特性，但實際上同時仍然只有一個執行緒 ( thread )。
+
+簡單示範了非同步的概念和實作後，接下來會是比較重要的部分。`setTimeout` 帶入的函式不能有回傳值，如果我們需要實現一個需要處理資料一段時間後回傳結果的函式，我們會用 `Promise` 類物件。根據 Mozilla 文件的[解釋](https://developer.mozilla.org/zh-TW/docs/Web/JavaScript/Reference/Global_Objects/Promise)，在 JavaScript 中的 `Promise` 如同字面意義，不管需要多久或是否成功，這種物件「承諾」帶入的函式一定會回傳某個值:  
+> `Promise` 物件代表一個即將完成、或失敗的非同步操作，以及它所產生的值。
+
+了解上述特性後，我們可以將上面 `example6.js` 中的 `request()` 改為 `Promise` 物件的版本，讓他在3秒後回傳一個字串:
+
+```javascript
+const request = () => {
+    return new Promise((resolve, reject) => {
+        try {
+            // do anything you want here
+            setTimeout(() => {
+                resolve('Data complete');
+            }, 3000);
+        } catch (error) {
+            // handle failure here
+            reject(error);
+        }
+    });
+}
+```
+
+在 JavaScript 中，建立一個新 `Promise` 物件時需要帶入一個執行子 ( executor ) 作為參數，這個執行函式 __必__ 然需要兩個參數 `resolve`、`reject`，分別用來回傳成功和失敗的執行結果。 最後，我們讓這個 `request()` 回傳這個 `Promise` 物件。接下來我們需要方法去取得 `Promise` 物件中執行子的回傳值，我們將 `example6.js` 中的 `componentDidMount()` 修改如下:
+
+```javascript
+componentDidMount() {
+    request().then((response) => {
+        // resolve() value will be available here
+        this.setState( { status: response } );
+    }).catch((error) => {
+        // reject() reason will be available here
+        console.log(error);
+    });
+}
+```
+
+對於一個 `Promise` 物件，我們可以使用這個物件的兩個內建 `then()`、`catch` 方法去取得回傳值 ( resolve value ) 或失敗原因 ( reject reason )。
+- `then( onfulfill(): function [, onreject: function] ): Promise`: 可以帶入兩個函式作為參數，第一個 `onfulfill()` 函式為必須，__而且 `resolve()` 的回傳值必然為 `onfulfill()` 的傳入參數__，在範例中，我們重新將回傳值命名為 `response`。第二個 `onreject()` 函式和 `catch()` 方法相同。
+- `catch( onreject(): function ): Promise`: 必須帶入一個 `onreject()` 函式做為參數，__而且 `reject()` 的回傳值必然為 `onreject()` 的傳入參數__。
+
+到這邊，我們已經能自己建立一個非同步函式並處理它的回傳值，現在來看看其他的應用情境。假設網頁要呈現的內容需要準備數個外部資源而不是單個，我們可以將上面 `example6.js` 改寫成這樣:
+
+```javascript
+// example7.js
+const delayGetString = (str) => {
+    return new Promise((resolve, reject) => {
+        try {
+            setTimeout(() => {
+                resolve(str);
+            }, 1000);
+        } catch (error) {
+            reject(error);
+        }
+    });
+}
+
+export default class App extends Component {
+    // ... same as example6.js
+    componentDidMount() {
+        var status = ''
+        delayGetString('Data').then(response1 => {
+            status += response1;
+            delayGetString(' has').then(response2 => {
+                status += response2;
+                delayGetString(' completed').then(response3 => {
+                    status += response3;
+                    this.setState( { status: status } );
+                })
+            });
+        });
+    }
+    // ... same as example6.js
+};
+```
+
+> JavaScript 從 ES6 版本之後始支援 `Promise` 的使用，在這之前的版本需要尋求其他解決方案
+
+`example7.js` 示範假設我們需要呈現三個外部資源的字串，並且具有順序性，這時候就會需要用到許多的 `then()` 方法，讓程式的結構變得複雜，這還不包括失敗的處理。因此 JavaScript 在 ES7 版本提出新的 feature `async/await`，來讓實現這樣的網頁應用更容易:
+- `async`: 是一個宣告函式的關鍵字，將函式的回傳值轉為回傳一個 `Promise` 物件，無論這個函式是否使用 `return`。
+- `await`: 是一個用來等待 `Promise` 物件 ( 完成 ) 的保留字，只能在被宣告為 `async` 的函式內部使用。
+
+`async/await` 和 `Promise` 的本質是相同的，類似一種語法糖 ( Syntatic sugar )。利用 `async/await`，我們可以把 `componentDidMount()` 改為這樣:
+
+```javascript
+async componentDidMount() {
+    var status = ''
+    status += await delayGetString('Data');
+    status += await delayGetString(' has');
+    status += await delayGetString(' complete');
+    this.setState( { status: status } );
+}
+```
+
+在上述更動中，我們將一個生命週期函式改為非同步，這會有下述影響:
+
+- [x] `componentDidMount()` 將會從回傳一個 `void` 轉為一個 `Promise`，但我們不會主動去呼叫生命週期函式，更不可能去存取這個函式的回傳值。
+- [x] `await` 可能會將 `componentDidMount()` block 住一段時間，但從前面的章節可以知道，`componentDidMount()` 會在頁面的第一次渲染 ( render ) 完成後 ( 也是最後一個 ) 執行，因此即使被 block 住，訪客仍然可以觀看頁面的其他內容。
+
