@@ -1448,5 +1448,10 @@ async componentDidMount() {
 在上述更動中，我們將一個生命週期函式改為非同步，這會有下述影響:
 
 - [x] `componentDidMount()` 將會從回傳一個 `void` 轉為一個 `Promise`，但我們不會主動去呼叫生命週期函式，更不可能去存取這個函式的回傳值。
-- [x] `await` 可能會將 `componentDidMount()` block 住一段時間，但從前面的章節可以知道，`componentDidMount()` 會在頁面的第一次渲染 ( render ) 完成後 ( 也是最後一個 ) 執行，因此即使被 block 住，訪客仍然可以觀看頁面的其他內容。
+- [x] `await` 可能會將 `componentDidMount()` block 住一段時間，但因為 `componentDidMount` 被改為一個非同步函式，所以 `componentDidMount() 完成` → `顯示在瀏覽器上`這樣的週期並不會因此被 block 住，讀者仍然能夠看到第一次渲染完成的內容。
+
+通常`async/await`是用來宣告一般函式使用，但即使我們將生命週期函式 `componenetDidMount()` 覆寫為非同步版本，根據特性只要正常的編寫程式碼就不會有不好的影響。
+
+> 參考一: https://davidwalsh.name/async-await  
+> 參考二: https://stackoverflow.com/questions/47970276/is-using-async-componentdidmount-good
 
