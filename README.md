@@ -13,24 +13,23 @@
 # CYP Cloud Overview
 ```
                            AWS IAM
-                              |
+                              │
                         Amazon Cognito   λ(function): AWS Lambda and usage
-        ______________________|_______________________________
-       |                 |                 |              |
-       |                 |                 |              |
+       ┌─────────────────┬────┴────────────┬──────────────┬─────┐
+       │                 │                 │              │
+       │                 │                 │              │
        λ             Amazon S3          AWS IoT          ...
-(backup cognito)     (host web)            |
-       |                 |                 |
-       |                 |                 |
-Amazon DynamoDB ←---λ----|--(rule engine)--|
-       |                 |                 |
-       |                 |                 |
- AWS Appsync-----CYP Cloud Application-----|
-                                           |
+(backup cognito)     (host web)            │
+       │                 │                 │
+       │                 │                 │
+Amazon DynamoDB ←---λ----│--(rule engine)--│
+       │                 │                 │
+       │                 │                 │
+ AWS Appsync ┅┅┅ CYP Cloud Application ┅┅┅ │
+                                           │
                                         (MQTT)
                                      CYP Devices
 ```
-
 ---
 
 # Techniques
@@ -539,6 +538,19 @@ aws s3 sync "/path/of/reactapp/build/" s3://MY_S3_BUCKET_NAME/ --profile my-defa
 在「Properties」→「Static website hosting」可以查看託管網頁的 endpoint，點選可以前往剛剛建立的網頁應用。
 ![](/images/complete-static-web-hosting.PNG)
 
+### Advance: Permission
+
+進 bucket 管理介面後，在「Permissions」分段可以管理這個 bucket 的存取權限，這在前面的章節也有提到。我們接下來會更深入了解，如何準確的控制 bucket 中物件的存取權限。
+
+#### Fine-Grained Access Control
+
+在「Permissions」分段我們可以看到四個區塊分別為「Public access settings，公開存取設定」、「Access Control List，存取控制清單」、「Bucket Policy，桶政策」、和「CORS configuration，跨網域資源共享架構」。想要精準控制存取權限，需要了解這四個區塊的功能。從大局來看，前三個區塊的功能幾乎是一樣的，而 CORS configuration 除了限制請求的來源，還額外定義了「跨網域存取」的啟用與設定。
+
+重點是這四個區塊對存取對象限制的套用優先順序 : `Public access settings` > `ACL` > `Bucket policy` > `CORS`。順位較小的設定，如果牴觸了上位設定則失效。例如 : 如果公開存取權限區塊沒有取消限制，`ACL` 和 `Bucket Policy` 甚至不能更改。如果在存取控制清單內允許公開讀取或寫入，那麼無論桶政策和跨區資源共享架構定義得多麼嚴格都沒有用。如果在桶政策內限制了只有某個 IP 或 網站能存取，那麼即使 CORS 開放接受所有來源的請求，最後仍然會被拒絕存取。那麼為什麼前一個段落會說 CORS 區塊是比較特殊的呢 ? 
+
+先從跨網域 (Cross Origin) 存取說起，通常我們不能對 "網頁服務網域" 外的資源傳送請求。用 S3 bucket 來舉例的話，假設我們託管了一個「桶」作為靜態網頁，這個網頁原本是不能請求「桶」外資源的，除非網域外資源開放了 CORS。回到 bucket 的許可管理面，「桶」的預設 CORS 是關閉的，只要我們在 CORS configuration 加入任何 Amazon 定義的 CORS 規則，那麼跨網域資源共享就啟動了。在還未啟用之前，即使在 ACL 介面公開所有存取操作，也無法從其他網域送請求去讀寫。反之，只要啟用，無論 CORS 對來源限制得多麼嚴格，只要牴觸了前三區塊的設定，就會失效。甚至公開存取設定區塊也沒有限制 CORS 的選項。
+
+另外，在 CORS 中沒有啟用的請求方法 (method)，視同資源沒辦法透過這種請求共享，這點也是比較特殊的，例如 : 我們即使在桶政策中允許「PUT」操作，但 CORS 沒有允許這個方法，「桶」會拒絕這個請求。也就是說，除去對存取「對象」的限制外，CORS 的優先順位是很前面的。因上述特性，想要精密控制 S3 物件的存取權限，並且允許跨網域存取資源，最好的辦法是在「ACL」或「桶政策」中限制對象，然後在 CORS 中限制請求使用的方法。
 
 ---
 
@@ -967,6 +979,14 @@ function getFormattedDate() {
 
 ---
 
+<a id="step-appsync"></a>
+
+## Step: Appsync
+
+如果一個應用的程式碼包含了各式各樣的 API 去對 AWS 上的資料存取或修改，那麼程式碼的內容將不受規範而且容易雜亂。為此產生了 AWS Appsync 服務。使用 Appsync 能實現的功能，通常也能透過使用 AWS SDK 提供的 API 去存取或修改資料來達成，提供一個統一的標準才是 Appsync 的目的。另外，Appsync 也提供了一些 features，來使得資源的 `Authorization` 變得更容易實現 (不要和 `Authentication` 搞混了)。
+
+---
+
 <a id="step-reactjs"></a>
 
 ## Step: ReactJS
@@ -1306,7 +1326,9 @@ class App extends Component {
 ---
 
 <a id="concept-javascript-async"></a>
+
 #### 概念五: 非同步 ( Asynchronous )  
+
 在網頁應用中，經常會遇到需要等待讀取外來資源的情況。而在準備外部資源的同時，我們可以先執行其他工作來增加效率或是使用者體驗。例如在下面這段程式碼中，網頁只能等到 `request()` 工作完成才可以將內容呈現給訪客:
 
 ```javascript
@@ -1455,3 +1477,33 @@ async componentDidMount() {
 > 參考一: https://davidwalsh.name/async-await  
 > 參考二: https://stackoverflow.com/questions/47970276/is-using-async-componentdidmount-good
 
+---
+
+#### 概念六: 路由 ( Route )
+
+想要在 `<Route />` 外使用 `history` 的方法:
+
+```javascript
+import { Component } from 'react';
+import { withRouter } from 'react-router';
+import { Proptypes } from 'prop-types';
+
+class ComponentYouWantToUseHistory extends Component {
+    static proptTypes = {
+        match: PropTypes.object.isRequired,
+        location: PropTypes.object.isRequired,
+        history: PropTypes.object.isRequired,
+    };
+
+    render() {
+        const { match, location, history } = this.props;
+
+        return (
+            <button onClick={()=>{history.push('/')}}/>
+        );
+    }
+}
+export default withRouter(ComponentYouWantToUseHistory);
+```
+
+---
