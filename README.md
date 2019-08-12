@@ -1507,3 +1507,89 @@ export default withRouter(ComponentYouWantToUseHistory);
 ```
 
 ---
+
+## Step: AWS Appsync
+
+### Query
+
+### Mutation
+
+### Subscription
+
+訂閱，顧名思義是一種非主動請求型的動作，當訂閱的對象有事件發生，訂閱者才會收到通知即變化的內容。在架構上，訂閱機制是建立在 MQTT 協議上的。Appsync 的 Subscription 動作目前僅能被 Mutation 動作，並且同時具備某些條件時觸發。舉例，假設現在有一個 Mutation 動作以及它的回傳值 Device 被宣告成 :
+
+```swift
+// type Device declare
+type Device {
+	deviceId: String!
+	model: String
+	updated_at: AWSTimestamp
+	status: String
+	version: String
+	nickname: String
+}
+
+// mutation declare
+type mutation {
+    deviceUpdate(deviceId: String!, status: String): Device
+}
+```
+
+這個 mutation 被宣告成，傳入一個選擇性字串參數 `status`，並對 `deviceId` 這台裝置進行更新，最後將動作的結果以 `Device` 這個資料結構回傳。我們可以訂閱這個 mutation 當它被觸發時通知我們，以下是 subscription 的宣告及 graphql 使用 : 
+
+```swift
+// declare
+type subscription {
+    onDeviceUpdate(deviceId: String!): Device
+}
+
+// graphql
+subscription DeviceRealtime {
+  onDeviceChange (deviceId: "f8:22:85:01:02:03") {
+      status
+  }
+}
+```
+
+以上的範例宣告了一個 `onDeviceUpdate` 的訂閱動作，這個動作需要傳入一個 `deviceId` 來指定裝置，並且當有事件發生時回傳 `Device` 這個資料結構。接著實際使用 graphql 時我們用 `f8:22:85:01:02:03` 這個 ID 指定裝置，並且要求如果事件發生，請回傳這台裝置的 `status` 這個屬性。以上動作看來萬無一失，但其實它能不能被觸發還和 mutation 動作發生的實際情況有關。我們來看看下面的例子 :
+
+```swift
+// mutation graphql example1
+mutation UpdateDevice {
+    deviceUpdate(deviceId: "f8:22:85:01:02:03", status: "power off") {
+        status
+    }
+}
+```
+
+這個範例 graphql 想要將 `f8:22:85:01:02:03` 這台裝置的狀態更改為 `"power off"`，而實際上他也作用成功，`status` 回傳值顯示狀態確實被改為 `"power off"`，但我們的訂閱 `DeviceRealtime` 卻沒有被觸發。這是為什麼 ? 並不是我們的宣告有什麼問題，該訂閱動作確實成功，問題在於 Appsync subscription 的通知機制 : 
+
+- 訂閱動作不帶有參數，則只要作為訂閱對象的 mutation 被以任何形式觸發，通知訂閱者。
+- 訂閱動作帶有參數，若作為訂閱對象的 mutation 被以任何形式觸發，並且回傳值包含訂閱動作帶入的參數，通知訂閱者。
+- 訂閱動作帶有參數，若作為訂閱對象的 mutation 被以任何形式觸發，並且回傳值 __不包含__ 訂閱動作帶入的參數，__不通知__ 訂閱者。
+
+在以上機制下，我們須將 mutation 的 graphql 改為 :
+
+```swift
+// mutation graphql example2
+mutation UpdateDevice {
+    deviceUpdate(deviceId: "f8:22:85:01:02:03", status: "power off") {
+        deviceId
+        status
+    }
+}
+```
+
+這樣我們的訂閱就會收到這個 mutation 的事件通知了。
+
+#### Advanced Topic : Lambda Authorizer
+
+__Response mapping template__
+
+```
+#if ($context.result.get("errorType") == "AUTHORIZATION_ERROR")
+  $util.unauthorized()
+#else
+  $util.toJson($context.result)
+#end
+```
